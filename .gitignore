@@ -1,0 +1,27 @@
+# Metadata
+.vscode
+
+# OS generated files
+._*
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Files
+package-lock.json
+sqlite.db
+*.sqlite
+
+# Folders
+/node_modules/
+
+# Uploads, keep default profile image
+!uploads/avatars
+!uploads/avatars/default-profile.png
+
+# Keep .gitkeep files
+!/**/.gitkeep

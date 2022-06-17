@@ -1,0 +1,13 @@
+{
+    "name": "nodejs-rest-api",
+    "version": "1.0.0",
+    "description": "NodeJS REST API.",
+    "author": "Sebastian Costiug",
+    "dependencies": {
+        "body-parser": "*",
+        "express": "*",
+        "sqlite": "*",
+        "sqlite3": "^5.0.8"
+    },
+    "license": "GPL"
+}
