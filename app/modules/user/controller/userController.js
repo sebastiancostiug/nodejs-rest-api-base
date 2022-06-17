@@ -5,7 +5,7 @@ const UserDao = require('../dao/userDao');
 const ControllerCommon = require('../../../controller/common/controllerCommon');
 
 /* Load User entity */
-const User = require('../dao/userDao');
+const User = require('../model/user');
 
 /**
  * User Controller
@@ -18,115 +18,115 @@ class UserController {
 
     /**
      * Tries to find an entity using its Id / Primary Key
-     * @params req, res
+     * @params request, res
      * @return entity
      */
-    findById(req, res) {
-        let id = req.params.id;
+    findById(request, response) {
+        let id = request.params.id;
 
         this.userDao
             .findById(id)
-            .then(this.common.findSuccess(res))
-            .catch(this.common.findError(res));
+            .then(this.common.findSuccess(response))
+            .catch(this.common.findError(response));
     }
 
     /**
      * Finds all entities.
      * @return all entities
      */
-    findAll(res) {
+    findAll(response) {
         this.userDao
             .findAll()
-            .then(this.common.findSuccess(res))
-            .catch(this.common.findError(res));
+            .then(this.common.findSuccess(response))
+            .catch(this.common.findError(response));
     }
 
     /**
      * Counts all the records present in the database
      * @return count
      */
-    countAll(res) {
+    countAll(response) {
         this.userDao
             .countAll()
-            .then(this.common.findSuccess(res))
-            .catch(this.common.serverError(res));
+            .then(this.common.findSuccess(response))
+            .catch(this.common.serverError(response));
     }
 
     /**
      * Updates the given entity in the database
-     * @params req, res
+     * @params request, res
      * @return true if the entity has been updated, false if not found and not updated
      */
-    update(req, res) {
+    update(request, response) {
         let user = new User();
-        user.id = req.body.id;
-        user.name = req.body.name;
-        user.email = req.body.email;
-        user.password = req.body.password;
-        user.progress = req.body.progress;
-        user.instances = req.body.instances;
+        user.id = request.body.id;
+        user.name = request.body.name;
+        user.email = request.body.email;
+        user.password = request.body.password;
+        user.progress = request.body.progress;
+        user.instances = request.body.instances;
 
         return this.userDao
             .update(user)
-            .then(this.common.editSuccess(res))
-            .catch(this.common.serverError(res));
+            .then(this.common.editSuccess(response))
+            .catch(this.common.serverError(response));
     }
 
     /**
      * Creates the given entity in the database
-     * @params req, res
+     * @params request, res
      * returns database insertion status
      */
-    create(req, res) {
+    create(request, response) {
         let user = new User();
-        if (req.body.id) {
-            user.id = req.body.id;
+        if (request.body.id) {
+            user.id = request.body.id;
         }
-        user.name = req.body.name;
-        user.email = req.body.email;
-        user.password = req.body.password;
-        user.progress = req.body.progress;
-        user.instances = req.body.instances;
+        user.name = request.body.name;
+        user.email = request.body.email;
+        user.password = request.body.password;
+        user.progress = request.body.progress;
+        user.instances = request.body.instances;
 
-        if (req.body.id) {
+        if (request.body.id) {
             return this.userDao
                 .createWithId(user)
-                .then(this.common.editSuccess(res))
-                .catch(this.common.serverError(res));
+                .then(this.common.editSuccess(response))
+                .catch(this.common.serverError(response));
         } else {
             return this.userDao
                 .create(user)
-                .then(this.common.editSuccess(res))
-                .catch(this.common.serverError(res));
+                .then(this.common.editSuccess(response))
+                .catch(this.common.serverError(response));
         }
     }
 
     /**
      * Deletes an entity using its Id / Primary Key
-     * @params req, res
+     * @params request, res
      * returns database deletion status
      */
-    deleteById(req, res) {
-        let id = req.params.id;
+    deleteById(request, response) {
+        let id = request.params.id;
 
         this.userDao
             .deleteById(id)
-            .then(this.common.editSuccess(res))
-            .catch(this.common.serverError(res));
+            .then(this.common.editSuccess(response))
+            .catch(this.common.serverError(response));
     }
 
     /**
      * Returns true if an entity exists with the given Id / Primary Key
-     * @params req, res
+     * @params request, res
      * @return
      */
-    exists(req, res) {
-        let id = req.params.id;
+    exists(request, response) {
+        let id = request.params.id;
 
         this.userDao
             .exists(id)
-            .then(this.common.existsSuccess(res))
-            .catch(this.common.findError(res));
+            .then(this.common.existsSuccess(response))
+            .catch(this.common.findError(response));
     }
 }
 

@@ -2,12 +2,21 @@
     "name": "nodejs-rest-api",
     "version": "1.0.0",
     "description": "NodeJS REST API.",
-    "author": "Sebastian Costiug",
+    "author": "Sebastian Costiug <sebastian@overbyte.dev>",
+    "license": "GPL",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sebastiancostiug/nodejs-rest-api-base.git"
+    },
+    "scripts": {
+        "start": "nodemon ./index.js"
+    },
     "dependencies": {
-        "body-parser": "*",
-        "express": "*",
-        "sqlite": "*",
+        "body-parser": "^1.20.0",
+        "express": "^4.18.1",
         "sqlite3": "^5.0.8"
     },
-    "license": "GPL"
+    "devDependencies": {
+        "nodemon": "^2.0.16"
+    }
 }

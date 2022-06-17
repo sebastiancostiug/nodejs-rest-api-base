@@ -2,40 +2,39 @@
  * Controllers Common functions
  */
 class controllerCommon {
-
-    findSuccess(res) {
+    findSuccess(response) {
         return (result) => {
-            res.status(200); // Found
-            res.json(result);
-        }
+            response.status(200); // Found
+            response.json(result);
+        };
     }
 
-    existsSuccess(res) {
+    existsSuccess(response) {
         return (result) => {
-            res.status(200); // Found
-            res.json(result);
-        }
+            response.status(200); // Found
+            response.json(result);
+        };
     }
 
-    editSuccess(res) {
+    editSuccess(response) {
         return () => {
-            res.status(201); // Created/Updated/Deleted
-            res.json({});
-        }
+            response.status(201); // Created/Updated/Deleted
+            response.json({});
+        };
     }
 
-    serverError(res) {
+    serverError(response) {
         return (error) => {
-            res.status(500);
-            res.json(error);
-        }
+            response.status(500);
+            response.json(error);
+        };
     }
 
-    findError(res) {
+    findError(response) {
         return (error) => {
-            res.status(404); // Not found
-            res.json(error);
-        }
+            response.status(404); // Not found
+            response.json(error);
+        };
     }
 }
 

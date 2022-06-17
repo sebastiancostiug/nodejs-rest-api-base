@@ -17,6 +17,8 @@ let init = function () {
             ' email TEXT,' +
             ' pass_hash TEXT,' +
             ' pass_reset_token TEXT,' +
+            ' token TEXT,' +
+            ' role TEXT,' +
             ' progress FLOAT,' +
             ' instances INT' +
             ')'

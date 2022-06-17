@@ -18,8 +18,8 @@ installedModules.forEach(function (moduleName, index) {
 });
 
 /* root route should be used just to chek that the API is woking correctly */
-router.use('/', function (req, res) {
-    res.status(200).json({
+router.use('/', function (request, response) {
+    response.status(200).json({
         status: 'success',
         message: 'API running OK',
     });
