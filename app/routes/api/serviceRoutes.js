@@ -1,7 +1,6 @@
 /* Load Modules */
 const express = require('express');
 const router = express.Router();
-const installedModules = require('../../config/checkModules');
 /**
  * user Entity routes
  */

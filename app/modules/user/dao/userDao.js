@@ -17,42 +17,22 @@ class UserDao {
      * @params id
      * @return entity
      */
-    findByCredentials(params) {
-        let sqlRequest = '';
-        let sqlParams = {};
-        if (params.token) {
-            sqlRequest =
-                'SELECT id, name, email, pass_hash, pass_reset_token, token, role, progress, instances FROM user WHERE token=$token';
-            sqlParams = { $token: params.token };
-        } else if (params.email && params.password) {
-            sqlRequest =
-                'SELECT id, name, email, pass_hash, pass_reset_token, token, role, progress, instances FROM user WHERE email=$email AND pass_hash=$passwordHash';
-            sqlParams = {
-                $email: params.email,
-                $passwordHash: params.password,
-            };
-        }
-        return {
-            request: sqlRequest,
-            params: sqlParams,
-            req: params,
-        };
-        // return this.common
-        //     .findOne(sqlRequest, sqlParams)
-        //     .then(
-        //         (row) =>
-        //             new User(
-        //                 row.id,
-        //                 row.name,
-        //                 row.email,
-        //                 row.pass_hash,
-        //                 row.pass_reset_token,
-        //                 row.token,
-        //                 row.role,
-        //                 row.progress,
-        //                 row.instances
-        //             )
-        //     );
+    async findByEmail(email) {
+        let sqlRequest =
+            'SELECT id, name, email, pass_hash, pass_reset_token, token, role, progress, instances FROM user WHERE email=$email';
+        let sqlParams = { $email: email };
+        const row = await this.common.findOne(sqlRequest, sqlParams);
+        return new User(
+            row.id,
+            row.name,
+            row.email,
+            row.pass_hash,
+            row.pass_reset_token,
+            row.token,
+            row.role,
+            row.progress,
+            row.instances
+        );
     }
 
     /**
@@ -62,7 +42,7 @@ class UserDao {
      */
     findById(id) {
         let sqlRequest =
-            'SELECT id, name, email, password, progress, instances FROM user WHERE id=$id';
+            'SELECT id, name, email, pass_hash, pass_reset_token, token, role, progress, instances FROM user WHERE id=$id';
         let sqlParams = { $id: id };
         return this.common
             .findOne(sqlRequest, sqlParams)
@@ -145,7 +125,7 @@ class UserDao {
      */
     create(User) {
         let sqlRequest =
-            'INSERT into user (name, email, password, progress, instances) ' +
+            'INSERT into user (id, name, email, pass_hash, pass_reset_token, token, role, progress, instances) ' +
             'VALUES ($name, $email, $password, $progress, $instances)';
         let sqlParams = {
             $name: User.name,

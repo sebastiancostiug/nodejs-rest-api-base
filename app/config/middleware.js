@@ -3,13 +3,10 @@ const installedModules = require('./checkModules');
 const elements = [];
 
 if (installedModules.includes('user')) {
-    const users = require('../modules/user/auth/loadUsers');
-    elements.push(users);
-
-    // authenticate each request
-    // will set `request.user`
-    const authenticate = require('../modules/user/auth/authentication'); // middleware for doing authentication
+    const authenticate = require('../modules/user/auth/authentication');
     elements.push(authenticate);
+    const permit = require('../modules/user/auth/authorization');
+    elements.push(permit);
 }
 
 module.exports = elements;
