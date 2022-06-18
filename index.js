@@ -2,7 +2,11 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const middleware = require('./app/config/middleware');
+
+/* Installed modules */
+const installedModules = require('./app/config/checkModules');
+/* User authentication */
+const authenticate = require('./app/modules/user/auth/authentication') || null;
 
 /* Init server listening */
 const port = process.argv[2] || 5000;
@@ -14,9 +18,10 @@ app.listen(port, function () {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// middleware.forEach(function (element, index) {
-//     app.use(element);
-// });
+/* If user module is present user should be authenticated */
+if (installedModules.includes('user')) {
+    app.use(authenticate);
+}
 
 /* Router configuration */
 app.use(require('./app/routes/router'));

@@ -4,6 +4,7 @@
 const express = require('express');
 const router = express.Router();
 
+/* Installed modules */
 const installedModules = require('../config/checkModules');
 
 /* API routes */
@@ -21,7 +22,7 @@ installedModules.forEach(function (moduleName, index) {
 router.use('/', function (request, response) {
     response.status(200).json({
         status: 'success',
-        message: 'API WORKING FINE!',
+        message: 'API online',
     });
 });
 

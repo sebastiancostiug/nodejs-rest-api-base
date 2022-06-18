@@ -6,18 +6,21 @@ const router = express.Router();
 const UserController = require('../controller/userController');
 const userController = new UserController();
 
+/* Load use authorization */
+const permit = require('../auth/authorization');
+
 /**
  * user Entity routes
  */
-router.get('/:id', function (request, response) {
+router.get('/:id', permit('user'), function (request, response) {
     userController.findById(request, response);
 });
 
-router.get('/', function (request, response) {
+router.get('/', permit('user'), function (request, response) {
     userController.findAll(response);
 });
 
-router.put('/:id', function (request, response) {
+router.put('/:id', permit('user'), function (request, response) {
     userController.update(request, response);
 });
 
@@ -25,7 +28,7 @@ router.post('/create', function (request, response) {
     userController.create(request, response);
 });
 
-router.delete('/:id', function (request, response) {
+router.delete('/:id', permit('admin'), function (request, response) {
     userController.deleteById(request, response);
 });
 

@@ -1,8 +1,7 @@
-/* Load Controller Common function */
 const ControllerCommon = require('../../../controller/common/controllerCommon');
-
-/* Load User entity */
 const { User } = require('../../../database/models');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 /**
  * User Controller
@@ -18,9 +17,18 @@ class UserController {
      * returns database insertion status
      */
     async create(request, response) {
+        let password_hash = null;
+        let token = null;
+        if (request.body.hasOwnProperty('password')) {
+            password_hash = bcrypt.hashSync(request.body.password, saltRounds);
+        } else {
+            token = '';
+        }
         await User.create({
             name: request.body.name,
             email: request.body.email,
+            password_hash: password_hash,
+            token: token,
         })
             .then(this.common.editSuccess(response))
             .catch(this.common.serverError(response));
