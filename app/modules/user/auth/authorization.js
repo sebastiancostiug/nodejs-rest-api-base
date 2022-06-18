@@ -3,8 +3,6 @@ const permit = function (...permittedRoles) {
     // return a middleware
     return (request, response, next) => {
         const { user } = request;
-        console.log(permittedRoles);
-
         if (
             (user && permittedRoles.includes(user.role)) ||
             permittedRoles == []
