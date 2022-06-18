@@ -21,7 +21,7 @@ installedModules.forEach(function (moduleName, index) {
 router.use('/', function (request, response) {
     response.status(200).json({
         status: 'success',
-        message: request.user,
+        message: 'API WORKING FINE!',
     });
 });
 

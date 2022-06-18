@@ -9,14 +9,6 @@ const userController = new UserController();
 /**
  * user Entity routes
  */
-router.get('/count', function (request, response) {
-    userController.countAll(response);
-});
-
-router.get('/exists/:id', function (request, response) {
-    userController.exists(request, response);
-});
-
 router.get('/:id', function (request, response) {
     userController.findById(request, response);
 });

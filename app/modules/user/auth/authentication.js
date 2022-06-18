@@ -1,5 +1,4 @@
 const checkAuthData = require('./checkAuthData');
-const UserDao = require('../dao/userDao');
 
 // middleware for authentication
 async function authorize(request, _response, next) {
@@ -9,8 +8,6 @@ async function authorize(request, _response, next) {
     }
     let user;
     if (authData.type == 'basic') {
-        const userDao = new UserDao();
-        user = await userDao.findByEmail(authData.email);
     } else if (authData.type == 'token') {
     }
     // set user on-success

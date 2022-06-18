@@ -9,17 +9,10 @@ class controllerCommon {
         };
     }
 
-    existsSuccess(response) {
-        return (result) => {
-            response.status(200); // Found
-            response.json(result);
-        };
-    }
-
     editSuccess(response) {
         return () => {
             response.status(201); // Created/Updated/Deleted
-            response.json({});
+            response.json({ message: 'done' });
         };
     }
 

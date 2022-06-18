@@ -12,7 +12,7 @@ router.get('/:action', function (request, response) {
 
     switch (request.params.action) {
         case 'install':
-            let database = require('../../config/dbconfig');
+            let database = require('../../config/db');
 
             database.init();
 

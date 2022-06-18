@@ -14,9 +14,9 @@ app.listen(port, function () {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-middleware.forEach(function (element, index) {
-    app.use(element);
-});
+// middleware.forEach(function (element, index) {
+//     app.use(element);
+// });
 
 /* Router configuration */
 app.use(require('./app/routes/router'));
