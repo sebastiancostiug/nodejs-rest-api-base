@@ -1,5 +1,7 @@
 /* Load config */
-require('dotenv').config();
+require('dotenv').config({
+    path: './app/config/.env',
+});
 
 /* Load modules */
 const express = require('express');

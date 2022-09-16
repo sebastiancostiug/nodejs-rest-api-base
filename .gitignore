@@ -12,6 +12,7 @@ Icon?
 Thumbs.db
 
 # Files
+.env
 package-lock.json
 database.json
 *.db
