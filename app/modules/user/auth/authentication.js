@@ -1,37 +1,44 @@
-const checkAuthData = require('./checkAuthData');
+const jwt = require('jsonwebtoken');
 const { User } = require('../../../database/models');
-const bcrypt = require('bcrypt');
 
 // middleware for authentication
-async function authorize(request, _response, next) {
-    let authData = checkAuthData.headers(request.headers);
-    if (!authData) {
-        authData = checkAuthData.body(request.body);
+async function authenticate(request, response, next) {
+    const authHeader = request.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) {
+        return response.status(401).json({
+            status: 'error',
+            message: 'Token missing',
+        });
     }
 
-    let user;
-    if (!authData) {
-        user = null;
-    } else if (authData.type === 'basic') {
-        let searchUser = await User.findOne({
-            where: { email: authData.email },
-        });
-        if (
-            searchUser &&
-            bcrypt.compareSync(authData.password, searchUser.password_hash)
-        ) {
-            user = searchUser;
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, jwt) => {
+        if (err) {
+            return response.status(403).json({
+                status: 'error',
+                message: 'Token invalid',
+            });
         }
-    } else if (authData.type === 'token') {
-        user = await User.findOne({
-            where: { token: authData.token },
-        });
-    }
-    // set user on-success
-    request.user = user;
 
-    // always continue to next middleware
-    next();
+        User.findOne({ where: { id: jwt.user } })
+            .then((user) => {
+                request.user = user;
+                next();
+            })
+            .catch((error) => console.log(error));
+    });
 }
 
-module.exports = authorize;
+function generateToken(user, refresh = false) {
+    if (refresh) return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+    });
+}
+
+module.exports = {
+    authenticate: authenticate,
+    generateToken: generateToken,
+};

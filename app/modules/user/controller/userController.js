@@ -1,36 +1,120 @@
-const ControllerCommon = require('../../../controller/common/controllerCommon');
-const { User } = require('../../../database/models');
+const CommonResponses = require('../../../controller/common/commonResponses');
+const { User, Token } = require('../../../database/models');
 const bcrypt = require('bcrypt');
+const { generateToken } = require('../auth/authentication');
+const jwt = require('jsonwebtoken');
 
 /**
  * User Controller
  */
 class UserController {
     constructor() {
-        this.common = new ControllerCommon();
+        this.common = new CommonResponses();
     }
 
     /**
+     * create
      * Creates the given entity in the database
-     * @params request, res
-     * returns database insertion status
+     * @params request, response
+     * @return database insertion status
      */
     async create(request, response) {
         const { name, email, password } = request.body;
 
-        let password_hash, token;
-
-        if (password) {
-            password_hash = bcrypt.hashSync(password, 10);
-        } else {
-            token = '';
-        }
+        let password_hash = bcrypt.hashSync(password, 10);
 
         await User.create({
             name: name,
             email: email,
-            password_hash: password_hash || null,
-            token: token || null,
+            password_hash: password_hash,
+        })
+            .then(this.common.editSuccess(response))
+            .catch(this.common.serverError(response));
+    }
+
+    /**
+     * login
+     * Logs the user in
+     * @params request, response
+     * @return json {accessToken, refreshToken, expiresIn}
+     */
+    async login(request, response) {
+        const { email, password } = request.body;
+        if ((email, password)) {
+            await User.findOne({ where: { email: email } })
+                .then((user) => {
+                    if (bcrypt.compareSync(password, user.password_hash)) {
+                        const accessToken = generateToken({ user: user.id });
+                        const refreshToken = generateToken(
+                            { user: user.id },
+                            true
+                        );
+
+                        Token.create({
+                            value: refreshToken,
+                            user_id: user.id,
+                        });
+
+                        return response.status(200).json({
+                            accessToken: accessToken,
+                            refreshToken: refreshToken,
+                            secondsValid: process.env.ACCESS_TOKEN_EXPIRATION,
+                        });
+                    }
+
+                    return response.status(403).json({ message: 'Forbbiden' });
+                })
+                .catch(this.common.serverError(response));
+        } else {
+            return response.status(401).json({ message: 'Unauthorized' });
+        }
+    }
+
+    /**
+     * refresh
+     * refreses access token
+     * @params request, response
+     * @return json {accessToken, refreshToken, expiresIn}
+     */
+    async refresh(request, response) {
+        const authHeader = request.headers['authorization'];
+        const refreshToken = authHeader && authHeader.split(' ')[1];
+        console.log(refreshToken);
+        if (!refreshToken)
+            return response.status(401).json({ message: 'Unauthorized' });
+
+        await Token.findOne({ where: { value: refreshToken } }).then(
+            (token) => {
+                jwt.verify(
+                    token.value,
+                    process.env.REFRESH_TOKEN_SECRET,
+                    (error, user) => {
+                        if (error)
+                            return response
+                                .status(403)
+                                .json({ message: 'Forbbiden' });
+
+                        const accessToken = generateToken({ user: user.id });
+
+                        return response.status(200).json({
+                            accessToken: accessToken,
+                            secondsValid: process.env.ACCESS_TOKEN_EXPIRATION,
+                        });
+                    }
+                );
+            }
+        );
+    }
+
+    /**
+     * logout
+     * deletes the current user's refresh token
+     */
+    async logout(request, response) {
+        await Token.destroy({
+            where: {
+                value: request.params.token,
+            },
         })
             .then(this.common.editSuccess(response))
             .catch(this.common.serverError(response));

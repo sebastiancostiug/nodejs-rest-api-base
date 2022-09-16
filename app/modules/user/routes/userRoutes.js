@@ -24,7 +24,7 @@ router.put('/:id', permit('user'), function (request, response) {
     userController.update(request, response);
 });
 
-router.post('/create', function (request, response) {
+router.post('/create', permit('admin'), function (request, response) {
     userController.create(request, response);
 });
 
