@@ -88,13 +88,13 @@ class UserController {
                 jwt.verify(
                     token.value,
                     process.env.REFRESH_TOKEN_SECRET,
-                    (error, user) => {
+                    (error, jwt) => {
                         if (error)
                             return response
                                 .status(403)
                                 .json({ message: 'Forbbiden' });
 
-                        const accessToken = generateToken({ user: user.id });
+                        const accessToken = generateToken({ user: jwt.user });
 
                         return response.status(200).json({
                             accessToken: accessToken,

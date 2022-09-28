@@ -1,29 +1,39 @@
 /* Load Modules */
 const express = require('express');
 const router = express.Router();
+/* Load controller */
+const ServiceController = require('../../controller/serviceController');
+const serviceController = new ServiceController();
+
+let authenticate = (request, response, next) => next();
+let permit = () => {
+    return (request, response, next) => next();
+};
+
 /**
- * user Entity routes
+ * If User table exists and is populated and user module is present,
+ * The user should be authenticated and authorized
  */
-router.get('/:action', function (request, response) {
-    let statusCode = 500;
-    let jsonResponse = {
-        message: 'Server error',
-    };
+const installedModules = require('../../config/checkModules');
+if (installedModules.includes('user')) {
+    authenticate =
+        require('../../modules/user/auth/authentication').authenticate;
+    permit = require('../../modules/user/auth/authorization');
+}
 
-    switch (request.params.action) {
-        case 'install':
-            let database = require('../../config/db');
-
-            database.init();
-
-            statusCode = 200;
-            jsonResponse = {
-                message: 'Database initiated',
-            };
-
-            break;
-    }
-    response.status(statusCode).json(jsonResponse);
+/**
+ * service  routes
+ */
+router.get('/install', (request, response) => {
+    serviceController.initialize(request, response);
 });
+
+router.post(
+    '/migrate-up',
+    [authenticate, permit('admin')],
+    (request, response) => {
+        serviceController.migrateUp(request, response);
+    }
+);
 
 module.exports = router;

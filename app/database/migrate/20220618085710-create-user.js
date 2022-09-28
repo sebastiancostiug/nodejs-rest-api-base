@@ -23,10 +23,6 @@ module.exports = {
                 type: DataTypes.STRING,
                 unique: true,
             },
-            token: {
-                type: DataTypes.STRING,
-                unique: true,
-            },
             recovery_key: {
                 type: DataTypes.STRING,
                 unique: true,

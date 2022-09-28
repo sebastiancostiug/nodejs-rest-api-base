@@ -20,7 +20,6 @@ async function authenticate(request, response, next) {
                 message: 'Token invalid',
             });
         }
-
         User.findOne({ where: { id: jwt.user } })
             .then((user) => {
                 request.user = user;
