@@ -43,7 +43,10 @@ class UserController {
         if ((email, password)) {
             await User.findOne({ where: { email: email } })
                 .then((user) => {
-                    if (bcrypt.compareSync(password, user.password_hash)) {
+                    if (
+                        user &&
+                        bcrypt.compareSync(password, user.password_hash)
+                    ) {
                         const accessToken = generateToken({ user: user.id });
                         const refreshToken = generateToken(
                             { user: user.id },
@@ -62,11 +65,15 @@ class UserController {
                         });
                     }
 
-                    return response.status(403).json({ message: 'Forbbiden' });
+                    return response
+                        .status(403)
+                        .json({ message: 'Invalid credentials' });
                 })
                 .catch(this.common.serverError(response));
         } else {
-            return response.status(401).json({ message: 'Unauthorized' });
+            return response
+                .status(401)
+                .json({ message: 'Missing credentials' });
         }
     }
 
