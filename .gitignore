@@ -14,12 +14,12 @@ Thumbs.db
 # Files
 .env
 package-lock.json
-database.json
 *.db
 *.sqlite
 
 # Folders
 /node_modules/
+/src/database/database/data/
 
 # Uploads, keep default profile image
 !uploads/avatars

@@ -1,6 +1,6 @@
 /* Load config */
 require('dotenv').config({
-    path: './app/config/.env',
+    path: './.env',
 });
 
 /* Load modules */
@@ -14,7 +14,7 @@ const corsOptions = {
 };
 
 /* Application routes */
-const routes = require('./app/routes/router');
+const routes = require('./src/routes/router');
 
 /* Init server listening */
 const port = process.env.LISTEN_PORT;

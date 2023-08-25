@@ -1,0 +1,60 @@
+version: '3.5'
+
+# NETWORKS
+networks:
+    node_backend:
+        # external: true
+        name: node_backend
+        ipam:
+            driver: default
+
+# SERVICES
+services:
+    # Node.JS App
+    node-backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: node-backend
+        hostname: node-backend
+        restart: unless-stopped
+        networks:
+            node_backend:
+        ports:
+            - 80:4000
+        env_file:
+            - ./.env
+        # depends_on:
+        #     - db
+        volumes:
+            - ./src:/app/src
+            - ./index.js:/app/index.js
+            - ./.env:/app/.env
+            - ./.sequelizerc:/app/.sequelizerc
+
+    # DB
+    db:
+        image: 'mariadb'
+        container_name: db
+        hostname: db
+        restart: unless-stopped
+        env_file:
+            - ./.env
+        networks:
+            node_backend:
+        volumes:
+            - './src/database/database/init:/docker-entrypoint-initdb.d'
+            - './src/database/database/data:/var/lib/mysql'
+
+    # DB ADMIN Web GUI
+    adminer:
+        image: 'adminer:latest'
+        container_name: adminer
+        hostname: adminer
+        restart: unless-stopped
+        depends_on:
+            - db
+        networks:
+            node_backend:
+        ports:
+            - 8080:8080

@@ -1,4 +1,4 @@
 const fs = require('fs');
-let modules = fs.readdirSync('./app/modules');
+let modules = fs.readdirSync('./src/modules');
 
 module.exports = modules;
