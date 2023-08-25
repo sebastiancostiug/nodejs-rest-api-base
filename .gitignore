@@ -13,7 +13,6 @@ Thumbs.db
 
 # Files
 .env
-package-lock.json
 *.db
 *.sqlite
 
