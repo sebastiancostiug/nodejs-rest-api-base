@@ -1,7 +1,6 @@
 const CommonResponses = require('./common/commonResponses');
 const { User } = require('../database/models');
 const bcrypt = require('bcrypt');
-const { Sequelize } = require('sequelize');
 
 /**
  * Service Controller
@@ -13,10 +12,10 @@ class ServiceController {
 
     /**
      * runs migration for available migration files
-     * @params request, res
-     * @return true if the entity has been updated, false if not found and not updated
+     * @params request, response
+     * @return response
      */
-    async initialize(request, response) {
+    async install(request, response) {
         const execSync = require('child_process').execSync;
 
         const install = () => {
@@ -46,20 +45,36 @@ class ServiceController {
             });
         };
 
-        User.findAndCountAll()
-            .then(
-                this.common.customSuccess(
-                    response,
-                    'Application already initialized'
-                )
-            )
-            .catch(install());
+        const installedModules = require('../config/checkModules');
+        if (installedModules.includes('user')) {
+            const { Sequelize } = require('sequelize');
+            const dbconfig = require('../config/database');
+            let sequelize = new Sequelize(dbconfig.development);
+
+            sequelize
+                .authenticate()
+                .then(() => {
+                    User.findAndCountAll()
+                        .then(
+                            this.common.customSuccess(
+                                response,
+                                'Application already initialized'
+                            )
+                        )
+                        .catch(install());
+                })
+                .catch(this.common.serverError(response));
+        } else {
+            response.status(200).json({
+                message: 'Application requires manual database setup.',
+            });
+        }
     }
 
     /**
      * runs migration for available migration files
-     * @params request, res
-     * @return true if the entity has been updated, false if not found and not updated
+     * @params request, response
+     * @return response
      */
     async migrateUp(request, response) {
         const execSync = require('child_process').execSync;

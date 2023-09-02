@@ -25,7 +25,7 @@ if (installedModules.includes('user')) {
  * service  routes
  */
 router.get('/install', (request, response) => {
-    serviceController.initialize(request, response);
+    serviceController.install(request, response);
 });
 
 router.post(
