@@ -14,7 +14,7 @@ const corsOptions = {
 };
 
 /* Application routes */
-const routes = require('./src/routes/router');
+const routes = require('./routes/router');
 
 /* Init server listening */
 const port = process.env.LISTEN_PORT;

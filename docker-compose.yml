@@ -24,13 +24,11 @@ services:
             - 80:4000
         env_file:
             - ./.env
-        # depends_on:
-        #     - db
+        depends_on:
+            - db
         volumes:
-            - ./src:/app/src
-            - ./index.js:/app/index.js
             - ./.env:/app/.env
-            - ./.sequelizerc:/app/.sequelizerc
+            # - ./src:/app
 
     # DB
     db:
@@ -44,7 +42,7 @@ services:
             node_backend:
         volumes:
             - './src/database/database/init:/docker-entrypoint-initdb.d'
-            - './src/database/database/data:/var/lib/mysql'
+            # - './src/database/database/data:/var/lib/mysql'
 
     # DB ADMIN Web GUI
     adminer:

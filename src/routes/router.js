@@ -7,7 +7,7 @@ const router = express.Router();
 /* Installed modules */
 const installedModules = require('../config/checkModules');
 
-/* API routes */
+/* API Service routes */
 router.use('/service', require('./api/serviceRoutes'));
 
 /* Create routes for each installed module */
@@ -16,6 +16,14 @@ installedModules.forEach(function (moduleName, index) {
         '/' + moduleName,
         require('../modules/' + moduleName + '/routes/' + moduleName + 'Routes')
     );
+});
+
+/* ping */
+router.use('/ping', function (request, response) {
+    response.status(200).json({
+        status: 'success',
+        message: 'pong',
+    });
 });
 
 /* catchall */

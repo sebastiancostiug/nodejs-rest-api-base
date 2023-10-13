@@ -9,7 +9,8 @@
         "url": "https://github.com/sebastiancostiug/nodejs-rest-api-base.git"
     },
     "scripts": {
-        "start": "nodemon ./index.js"
+        "start": "node ./build/index.js",
+        "dev": "nodemon ./src/index.js"
     },
     "dependencies": {
         "bcrypt": ">=5.0.1",
